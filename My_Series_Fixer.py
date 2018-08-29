@@ -12,9 +12,9 @@ def natural_keys(text):
     return [atoi(c) for c in re.split('(\d+)', text)]
 
 
-def getEpisodes(title, season):
+def getEpisodes(id, season):
     url = "https://www.imdb.com/title/{}/episodes?season={}".format(
-        title, season)
+        id, season)
     selector = "#episodes_content strong a"
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.content, features="html5lib")
@@ -113,10 +113,10 @@ def fixSubs():
 
 serie = input("Input Serie: ")
 id = getId(serie)
-if id != 0:
-    print("Get Id: ", id)
-else:
-    print("Problem Get Id!")
+while id == 0:
+    serie = input("Input Serie: ")
+    id = getId(serie)
+print("Get Id: ", id)
 
 a = input("Input: ")
 while a != "close":
