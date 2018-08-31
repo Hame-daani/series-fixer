@@ -56,25 +56,32 @@ def printEpisodes():
 
 
 def fixFiles(serie, season, episodes):
-    # print("Fixing Files {} Season {}".format(serie, season))
     path = "./S{}".format(season)
+
     list = [f for f in os.listdir(path) if not (f.endswith(
         ".srt") or f.endswith(".Srt") or f.endswith(".txt") or f.endswith(".py") or f.endswith(".ass") or f.endswith(".ico"))]
+
     list.sort(key=natural_keys)
+
     if len(episodes) == len(list):
+
         f = open("{}/files.txt".format(path), 'w')
         for l in list:
             f.write(l + "\n")
         f.close()
+
         for i in range(0, len(list)):
             episodes[i] = episodes[i].replace("/", "-")
+
             os.rename(
                 "{}/{}".format(path, list[i]), "{}/{} - {}".format(path, i + 1, episodes[i]).encode("utf-8"))
+
         print(Fore.GREEN + "--- Fix {} Season {} files ---".format(serie, season))
         print(Style.RESET_ALL)
     else:
         problem = "*** Files {} Season {} episodes:{} list:{} ***".format(
             serie, season, len(episodes), len(list))
+
         print(Fore.RED + problem)
         print(Style.RESET_ALL)
 
@@ -102,31 +109,37 @@ def printSubs():
 
 
 def fixSubs(serie, season, episodes):
-    # print("Fixing {} Season {} Subs".format(serie, season))
     path = "./S{}".format(season)
+
     list = [f for f in os.listdir(path) if (f.endswith(
         ".srt") or f.endswith(".Srt") or f.endswith(".ass"))]
+
     list.sort(key=natural_keys)
+
     if len(episodes) == len(list):
+
         f = open("{}/subs.txt".format(path), 'w')
         for l in list:
             f.write(l + "\n")
         f.close()
+
         for i in range(0, len(list)):
             episodes[i] = episodes[i].replace("/", "-")
+
             os.rename(
                 "{}/{}".format(path, list[i]), "{}/{} - {}.srt".format(path, i + 1, episodes[i]).encode("utf-8"))
+
         print(Fore.GREEN + "--- Fix {} Season {} subs ---".format(serie, season))
         print(Style.RESET_ALL)
     else:
         problem = "*** Subs {} Season {} episodes:{} list:{} ***".format(
             serie, season, len(episodes), len(list))
+
         print(Fore.RED + problem)
         print(Style.RESET_ALL)
 
 
 def fix(serie, season, id):
-    season = season[1:]
     episodes = getEpisodes(id, season)
     if len(episodes) > 0:
         print("Get Episods for {} Season {}".format(serie, season))
@@ -147,5 +160,5 @@ if id == 0:
 else:
     print(Fore.GREEN + "Get Id For {}".format(serie))
     print(Style.RESET_ALL)
-    season = "S" + input("Input Season: ")
+    season = input("Input Season: ")
     fix(serie, season, id)
