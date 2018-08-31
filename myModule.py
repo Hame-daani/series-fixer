@@ -17,9 +17,11 @@ def getEpisodes(id, season):
     url = "https://www.imdb.com/title/{}/episodes?season={}".format(
         id, season)
     selector = "#episodes_content strong a"
+
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.content, features="html5lib")
     data = soup.select(selector)
+
     episodes = []
     for d in data:
         episodes.append(d['title'])
@@ -29,30 +31,19 @@ def getEpisodes(id, season):
 def getId(title):
     selector = ".lister-item-header a"
     url = "https://www.imdb.com/search/title?title="
+
     title = title.replace(" ", "+")
     data = requests.get(url + title)
     soup = bs4.BeautifulSoup(data.content, features="html5lib")
     d = soup.select(selector)
+
     if d != 0:
         id = str(d[0])
     else:
         return 0
+
     id = id[id.index("tt"):id.index("/?")]
     return id
-
-
-def listSeason():
-    print("**** List Seasons ****")
-    for root, dirs, files in os.walk("./"):
-        print(dirs)
-
-
-def printEpisodes():
-    print("**** Print Episodes ****")
-    season = input("Input Season: ")
-    episodes = getEpisodes(id, season)
-    for ep in episodes:
-        print(ep)
 
 
 def fixFiles(serie, season, episodes):
@@ -88,28 +79,6 @@ def fixFiles(serie, season, episodes):
         print(Style.RESET_ALL)
 
     return problems
-
-
-def printFiles():
-    print("**** Print Files ****")
-    season = input("Input Season: ")
-    path = "./S{}".format(season)
-    list = [f for f in os.listdir(path) if not (f.endswith(
-        ".srt") or f.endswith(".Srt"))]
-    list.sort(key=natural_keys)
-    for l in list:
-        print(l)
-
-
-def printSubs():
-    print("**** Print Subs *****")
-    season = input("Input Season: ")
-    path = "./S{}".format(season)
-    list = [f for f in os.listdir(path) if (f.endswith(
-        ".srt") or f.endswith(".Srt"))]
-    list.sort(key=natural_keys)
-    for l in list:
-        print(l)
 
 
 def fixSubs(serie, season, episodes):
